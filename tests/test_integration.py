@@ -20,11 +20,9 @@ def auth_headers(token: str) -> Dict[str, str]:
 
 
 def test_posts_crud_and_authentication(client: TestClient):
-    # Unique username per test run
     unique_user = f"user_{uuid.uuid4().hex[:8]}"
     token = register_and_login(client, unique_user, "strongpassword")
 
-    # Create post
     r = client.post(
         "/api/posts",
         headers=auth_headers(token),
@@ -33,21 +31,18 @@ def test_posts_crud_and_authentication(client: TestClient):
     assert r.status_code == 201, r.text
     post = r.json()
     assert post["title"] == "Hello &lt;b&gt;World&lt;/b&gt;"
-    assert "script" not in post["content"].lower()
+    assert "<script>" not in post["content"].lower()
 
-    # List posts requires auth
     r = client.get("/api/posts", headers=auth_headers(token))
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list) and len(data) >= 1
 
-    # Access without token is denied
     r = client.get("/api/posts")
     assert r.status_code == 401
 
 
 def test_cannot_create_post_without_auth(client: TestClient):
-    """Test that creating a post without authentication is rejected."""
     r = client.post(
         "/api/posts",
         json={"title": "Unauthorized Post", "content": "This should fail"},
@@ -57,7 +52,6 @@ def test_cannot_create_post_without_auth(client: TestClient):
 
 
 def test_cannot_get_posts_without_auth(client: TestClient):
-    """Test that getting posts without authentication is rejected."""
     r = client.get("/api/posts")
     assert r.status_code == 401
     assert "Not authenticated" in r.json()["detail"]

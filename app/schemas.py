@@ -3,17 +3,12 @@ from __future__ import annotations
 from datetime import datetime
 
 import bleach
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 
 def escape_html(value: str) -> str:
     # Escape all HTML tags/attrs to mitigate XSS; keep text as-is
     return bleach.clean(value, tags=[], attributes={}, protocols=[], strip=False)
-
-
-def strip_html(value: str) -> str:
-    # Remove all HTML tags entirely (useful for large content fields)
-    return bleach.clean(value, tags=[], attributes={}, protocols=[], strip=True)
 
 
 class Token(BaseModel):
@@ -38,6 +33,16 @@ class PostCreate(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     content: str = Field(min_length=1, max_length=4000)
 
+    @field_validator("title", mode="before")
+    @classmethod
+    def escape_title(cls, v: str) -> str:
+        return escape_html(v)
+
+    @field_validator("content", mode="before")
+    @classmethod
+    def escape_content(cls, v: str) -> str:
+        return escape_html(v)
+
 
 class PostOut(BaseModel):
     id: int
@@ -52,6 +57,6 @@ class PostOut(BaseModel):
 
     @field_serializer("content", when_used="json")
     def serialize_content(self, value: str):  # type: ignore[override]
-        return strip_html(value)
+        return escape_html(value)
 
     model_config = {"from_attributes": True}

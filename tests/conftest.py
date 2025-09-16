@@ -19,7 +19,6 @@ def _isolate_db(tmp_path, monkeypatch):
     os.close(db_fd)
     url = f"sqlite:///{db_path}"
     monkeypatch.setenv("DATABASE_URL", url)
-    # Reload DB and app modules so the engine picks up the new env var
     importlib.reload(db_module)
     importlib.reload(models_module)
     importlib.reload(main_module)

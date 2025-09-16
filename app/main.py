@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from . import models  # noqa: F401  Ensure models are imported so metadata includes tables
+from . import models
 from .db import Base, engine
 from .routers_auth import router as auth_router
 from .routers_posts import router as posts_router

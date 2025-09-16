@@ -46,7 +46,7 @@ def get_current_user(
     token = credentials.credentials
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
-        username: str = payload.get("sub")  # type: ignore[assignment]
+        username: str = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")
     except jwt.ExpiredSignatureError:
