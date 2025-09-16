@@ -13,30 +13,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
         with:
           python-version: '3.11'
 
-      - name: Install uv
-        run: |
-          pip install uv
-
       - name: Install dependencies
         run: |
-          uv pip install -e .[dev]
-
-      - name: Lint with ruff
-        run: |
-          uv run ruff check .
+          uv sync --dev
 
       - name: Format check with black
         run: |
           uv run black --check .
 
       - name: Run tests
-        env:
-          PYTHONPATH: .
         run: |
           uv run pytest -q --maxfail=1
 
