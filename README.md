@@ -10,22 +10,6 @@
 - Санитизация XSS: bleach
 - Инструменты: uv (менеджер пакетов/запуск), ruff, black, pytest
 
-## Как запустить локально
-1. Установить зависимости
-```bash
-uv sync
-```
-2. Запустить сервер
-```bash
-uv run uvicorn app.main:app --reload
-```
-3. Swagger UI доступен по адресу `/docs`.
-
-Переменные окружения:
-- `DATABASE_URL` (опционально): например `sqlite:///./app.db` (по умолчанию)
-- `JWT_SECRET`
-- `JWT_EXP_MIN` (по умолчанию: 60)
-
 ## API
 
 ### Аутентификация
@@ -39,7 +23,7 @@ uv run uvicorn app.main:app --reload
 
 Используйте заголовок `Authorization: Bearer <token>` для защищенных эндпоинтов.
 
-### Посты (защищенные)
+### Посты
 - GET `/api/posts` — список постов
   - Ответ: `PostOut[]` (заголовок/содержимое санитизированы)
 
@@ -64,10 +48,12 @@ uv run pytest -q
 - Санитизацию XSS в ответах
 - Защита от SQL инъекций
 
-## CI/CD
-GitHub Actions workflow `.github/workflows/ci.yml` запускается при push/PR в `main`:
-- Ruff линтинг
-- Black проверка форматирования
-- Pytest
-- SAST: Safety
-- SCA: Snyk
+## Скриншоты
+
+Отчет шага SAST (safety)
+
+![sast report](./images/sast.jpg)
+
+Отчет шага SCA (snyk)
+
+![sast report](./images/sca.png)
