@@ -69,5 +69,5 @@ GitHub Actions workflow `.github/workflows/ci.yml` запускается при
 - Ruff линтинг
 - Black проверка форматирования
 - Pytest
-- SAST: Bandit
-- SCA: Safety
+- SAST: Safety
+- SCA: Snyk

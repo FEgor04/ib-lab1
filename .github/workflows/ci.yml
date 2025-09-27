@@ -30,8 +30,14 @@ jobs:
         run: |
           uv run pytest -q --maxfail=1
 
-      - name: SCA with safety
+      - name: SAST with safety
         run: |
           uv run safety check || true
+
+      - name: Snyk security check
+        uses: snyk/actions/python@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
 
