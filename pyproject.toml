@@ -35,4 +35,11 @@ target-version = ["py311"]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["tests*", "report*", "images*"]
+
+[tool.setuptools.package-data]
+app = ["*.py"]
+
 
